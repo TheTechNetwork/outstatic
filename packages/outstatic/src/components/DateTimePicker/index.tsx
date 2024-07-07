@@ -1,5 +1,6 @@
-import { ButtonHTMLAttributes, forwardRef, createElement } from 'react'
-import Datepicker from 'react-datepicker'
+import { ButtonHTMLAttributes, createElement, forwardRef } from 'react'
+import Datepicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker'
+import { Button } from '../ui/button'
 
 type DateTimePickerProps = {
   date?: Date
@@ -53,14 +54,9 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
     >,
     ref: React.Ref<HTMLButtonElement>
   ) => (
-    <button
-      {...props}
-      ref={ref}
-      className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-      disabled={!date}
-    >
+    <Button {...props} ref={ref} variant="outline" disabled={!date}>
       {date ? date.toLocaleDateString('en-US', options) : 'Loading'}
-    </button>
+    </Button>
   )
 
   return (
@@ -86,7 +82,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
             increaseMonth,
             prevMonthButtonDisabled,
             nextMonthButtonDisabled
-          }) => (
+          }: ReactDatePickerCustomHeaderProps): any => (
             <div className="react-datepicker__header">
               <select
                 className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
@@ -137,7 +133,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
               </button>
             </div>
           )}
-          customInput={createElement(forwardRef(DatePickerButton))}
+          customInput={createElement(forwardRef(DatePickerButton)) as any}
           showTimeInput
           timeInputLabel="Time:"
           withPortal

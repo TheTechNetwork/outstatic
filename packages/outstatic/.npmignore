@@ -1,2 +1,6 @@
 src
 coverage
+.next
+.swc
+.turbo
+node_modules

@@ -2,6 +2,7 @@ import { OstDocument } from '@/types/public'
 import fs from 'fs'
 import matter from 'gray-matter'
 import { join } from 'path'
+import { OutstaticSchema } from './metadata/types'
 
 // metadata db features
 export { load } from './metadata/load'
@@ -24,7 +25,7 @@ export function getDocumentBySlug(
   collection: string,
   slug: string,
   fields: string[] = []
-): OstDocument | null {
+): OutstaticSchema | null {
   try {
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
     const collectionsPath = join(CONTENT_PATH, collection)
@@ -63,7 +64,7 @@ export function getDocumentBySlug(
       }
     })
 
-    return items as OstDocument
+    return items as OutstaticSchema
   } catch (error) {
     console.error({ getDocumentBySlug: error })
     return null
@@ -79,9 +80,12 @@ export function getDocuments(collection: string, fields: string[] = []) {
           ...fields,
           'publishedAt',
           'status'
-        ]) as OstDocument
+        ]) as OstDocument | null
     )
-    .filter((document) => document.status === 'published')
+    .filter(
+      (document): document is OstDocument =>
+        document !== null && document.status === 'published'
+    )
     // sort documents by date in descending order
     .sort((document1, document2) =>
       document1.publishedAt > document2.publishedAt ? -1 : 1

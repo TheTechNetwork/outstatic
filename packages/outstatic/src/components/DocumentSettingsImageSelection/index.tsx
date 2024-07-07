@@ -1,9 +1,11 @@
-import Input from '@/components/Input'
+import Input from '@/components/ui/input'
 import { DocumentContext } from '@/context'
 import { Document } from '@/types'
 import { API_IMAGES_PATH, IMAGES_PATH } from '@/utils/constants'
 import { addImage } from '@/utils/editor/utils/addImage'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { Button } from '../ui/button'
 
 type DocumentSettingsImageSelectionProps = {
   name: 'coverImage' | 'author.picture'
@@ -24,6 +26,7 @@ const DocumentSettingsImageSelection = ({
   description,
   label
 }: DocumentSettingsImageSelectionProps) => {
+  const { basePath } = useOutstatic()
   const { document, editDocument } = useContext(DocumentContext)
   const [showImage, setShowImage] = useState(false)
   const [showImageOptions, setShowImageOptions] = useState(false)
@@ -35,8 +38,8 @@ const DocumentSettingsImageSelection = ({
 
   useEffect(() => {
     const image = resolvedImage?.replace(
-      `/${IMAGES_PATH}`,
-      `/${API_IMAGES_PATH}`
+      `${basePath}/${IMAGES_PATH}`,
+      `${basePath}/${API_IMAGES_PATH}`
     )
     setImage(image || '')
     setShowImageOptions(!resolvedImage)
@@ -97,16 +100,16 @@ const DocumentSettingsImageSelection = ({
             />
           </div>
           <div className="w-full flex justify-between mt-2">
-            <button
+            <Button
+              variant="destructive"
               onClick={() => {
                 editDocument(name, '')
                 setShowImage(false)
                 setShowLink(false)
               }}
-              className="rounded-lg border border-red-700 bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
             >
               Remove
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -128,16 +131,15 @@ const DocumentSettingsImageSelection = ({
             }}
           />
           <div className="w-full flex justify-between mt-2">
-            <button
+            <Button
+              variant="outline"
               onClick={() => {
                 setShowLink(false)
                 setShowImageOptions(true)
               }}
-              type="button"
-              className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -147,7 +149,7 @@ const DocumentSettingsImageSelection = ({
             {label ?? 'Add an image'}
           </span>
           <div className="w-full flex justify-between mt-2">
-            <button
+            <Button
               onClick={() => {
                 setShowLink(true)
                 setShowImageOptions(false)
@@ -155,17 +157,13 @@ const DocumentSettingsImageSelection = ({
                 setLoadingError(false)
               }}
               type="button"
-              className="flex rounded-lg border border-gray-600 bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:border-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 disabled:cursor-not-allowed disabled:bg-gray-600 md:mb-2"
             >
               From link
-            </button>
+            </Button>
 
-            <label
-              htmlFor={`${name}-upload`}
-              className="flex cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:border-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 disabled:cursor-not-allowed disabled:bg-gray-600 md:mb-2"
-            >
-              From file
-            </label>
+            <Button asChild className="hover:cursor-pointer">
+              <label htmlFor={`${name}-upload`}>From file</label>
+            </Button>
             <input
               type="file"
               accept="image/*"

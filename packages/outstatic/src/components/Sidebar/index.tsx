@@ -3,7 +3,15 @@ import { OUTSTATIC_VERSION } from '@/utils/constants'
 import generateUniqueId from '@/utils/generateUniqueId'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
+import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { singular } from 'pluralize'
 
 type SidebarProps = {
   isOpen: boolean
@@ -59,16 +67,16 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 lg:block md:w-64 md:min-w-[16rem] ${
+      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 md:w-64 md:min-w-[16rem] lg:block ${
         isOpen ? 'block' : 'hidden'
       }`}
       aria-label="Sidebar"
     >
-      <div className="flex flex-col py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 justify-between">
+      <div className="scrollbar-hide flex h-full max-h-[calc(100vh-96px)] flex-col justify-between overflow-y-scroll bg-gray-50 py-4 px-3">
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
-              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+              <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
@@ -89,8 +97,11 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           <>
             {collections.map((collection) => (
               <li key={collection}>
-                <Link href={`/outstatic/${collection}`}>
-                  <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+                <div className="group w-full flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                  <Link
+                    href={`/outstatic/${collection}`}
+                    className="flex flex-grow items-center"
+                  >
                     <svg
                       className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
@@ -106,14 +117,37 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                       ></path>
                     </svg>
                     <span className="ml-3 capitalize">{collection}</span>
-                  </div>
-                </Link>
+                  </Link>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="z-10">
+                          <Link
+                            href={`/outstatic/${collection}/new`}
+                            className="hidden group-hover:block bg-white p-1 border border-gray-200 text-gray-500 rounded-sm hover:text-gray-700"
+                            aria-label='Create new item in collection "collection"'
+                          >
+                            <Plus strokeWidth={3} size={14} />
+                          </Link>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Create new{' '}
+                          <span className="inline-block first-letter:uppercase">
+                            {singular(collection)}
+                          </span>
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </li>
             ))}
           </>
           <li>
             <Link href="/outstatic/settings">
-              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+              <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   fill="none"
@@ -135,18 +169,18 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         </ul>
         {broadcast ? (
           <div
-            className="p-4 mt-6 rounded-lg bg-white border border-gray"
+            className="border-gray mt-6 rounded-lg border bg-white p-4"
             role="alert"
           >
-            <div className="flex items-center mb-3">
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+            <div className="mb-3 flex items-center">
+              <span className="mr-2 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
                 {broadcast.title}
               </span>
             </div>
             <p className="text-sm">{broadcast.content}</p>
             {broadcast?.link ? (
               <a href={broadcast.link} target="_blank" rel="noreferrer">
-                <span className="mt-3 text-xs underline font-medium">
+                <span className="mt-3 text-xs font-medium underline">
                   Learn more
                 </span>
               </a>
@@ -155,16 +189,16 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         ) : null}
       </div>
 
-      <div className="h-10 bg-gray-50 py-2 px-4 border-t text-xs flex justify-between items-center w-full">
+      <div className="flex h-10 w-full items-center justify-between border-t bg-gray-50 py-2 px-4 text-xs">
         <a
-          className="font-semibold text-gray-500 hover:underline hover:text-gray-900"
+          className="font-semibold text-gray-500 hover:text-gray-900 hover:underline"
           href="https://outstatic.com/docs"
           target="_blank"
           rel="noreferrer"
         >
           Documentation
         </a>
-        <div className="gap-4 flex">
+        <div className="flex items-center justify-center gap-2">
           <a
             href="https://github.com/avitorio/outstatic"
             target="_blank"
@@ -189,23 +223,48 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             </svg>
           </a>
           <a
-            href="https://twitter.com/outstatic"
+            href="https://x.com/outstatic"
             target="_blank"
-            aria-label="Twitter"
+            aria-label="X.com"
             rel="noreferrer"
-            className="group"
+            className="group flex h-5 w-5 items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 248 204"
-              width="20"
-              height="20"
+              viewBox="0 0 300 300.251"
+              width="17"
+              height="17"
               fill="none"
             >
               <path
                 className="fill-gray-400 group-hover:fill-gray-900"
-                d="M221.95 51.29c.15 2.17.15 4.34.15 6.53 0 66.73-50.8 143.69-143.69 143.69v-.04c-27.44.04-54.31-7.82-77.41-22.64 3.99.48 8 .72 12.02.73 22.74.02 44.83-7.61 62.72-21.66-21.61-.41-40.56-14.5-47.18-35.07 7.57 1.46 15.37 1.16 22.8-.87-23.56-4.76-40.51-25.46-40.51-49.5v-.64c7.02 3.91 14.88 6.08 22.92 6.32C11.58 63.31 4.74 33.79 18.14 10.71c25.64 31.55 63.47 50.73 104.08 52.76-4.07-17.54 1.49-35.92 14.61-48.25 20.34-19.12 52.33-18.14 71.45 2.19 11.31-2.23 22.15-6.38 32.07-12.26-3.77 11.69-11.66 21.62-22.2 27.93 10.01-1.18 19.79-3.86 29-7.95-6.78 10.16-15.32 19.01-25.2 26.16z"
+                d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"
               />
+            </svg>
+          </a>
+          <a
+            href="https://discord.gg/myn4qgfXaG"
+            target="_blank"
+            aria-label="Discord"
+            rel="noreferrer"
+            className="group flex h-5 w-5 items-center justify-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              width="18"
+              height="18"
+              viewBox="0 -28.5 256 256"
+              version="1.1"
+              preserveAspectRatio="xMidYMid"
+            >
+              <g>
+                <path
+                  className="fill-gray-400 group-hover:fill-gray-900"
+                  d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z"
+                  fillRule="nonzero"
+                ></path>
+              </g>
             </svg>
           </a>
         </div>

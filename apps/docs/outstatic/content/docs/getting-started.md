@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2023-09-23T18:34:15.000Z'
+publishedAt: '2024-03-18T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -54,7 +54,7 @@ Awesome, with your GitHub Oauth keys in hand select how you want to use Outstati
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-dev-blog.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic.com%2Fimages%2Foutstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https%3A%2F%2Foutstatic.com%2Fdocs%2Fenvironment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
 
 Select GitHub as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
 
@@ -63,8 +63,6 @@ Fill in the following environment variables:
 - `OST_GITHUB_ID` with your GitHub Client ID.
 
 - `OST_GITHUB_SECRET` with your GitHub Client secret.
-
-- `OST_TOKEN_SECRET` with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
 
 Click on Deploy and wait until it's done.
 
@@ -99,19 +97,36 @@ Before we start, you should know Outstatic saves content as markdown files to yo
 First install the Outstatic package and dependencies:
 
 ```bash
-# npm
 npm install outstatic
+```
 
-# yarn
+```bash
 yarn add outstatic
+```
 
-#pnpm
+```bash
 pnpm install outstatic
 ```
 
-Once installed, you'll need to add two files to your `/app` folder:
+```bash
+bun add outstatic
+```
 
-`/app/outstatic/[[...ost]]/page.tsx`
+Once installed, you'll need to add three files to your `/app` folder. We'll create a [route group](https://nextjs.org/docs/app/building-your-application/routing/route-groups) so that your site's styles won't interfere with the Outstatic dashboard. Here we've named the route group `(cms)`:
+
+`/app/(cms)/layout.tsx`
+
+```javascript
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+`/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
 ```javascript
 import 'outstatic/outstatic.css'
@@ -124,7 +139,7 @@ export default async function Page({ params }: { params: { ost: string[] } }) {
 }
 ```
 
-And `/app/api/outstatic/[[...ost]]/route.ts`
+And lastly, the api route (outside of the route group): `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
 import { OutstaticApi } from 'outstatic'
@@ -138,13 +153,11 @@ Start your dev server. Assuming you're on `http://localhost:3000` you can access
 
 You should see this page:
 
-![Outstatic welcome screen](/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
+![Outstatic welcome screen](/docs/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
 
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
@@ -164,7 +177,7 @@ Restart your service and go back to the `/outstatic` page.
 
 If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
 
-![](/images/outstatic-login-screen-I4Mz.png)
+![](/docs/images/outstatic-login-screen-I4Mz.png)
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
@@ -191,8 +204,6 @@ Don't forget to add the following environment variables to your Vercel project:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.

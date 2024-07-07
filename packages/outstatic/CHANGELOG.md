@@ -1,5 +1,74 @@
 # outstatic
 
+## 1.4.9
+
+### Patch Changes
+
+- e8ea476: Fix document sorting
+- c3495a4: Add boolean custom field
+
+## 1.4.8
+
+### Patch Changes
+
+- 506a070: Add new post button to sidebar
+
+## 1.4.7
+
+### Patch Changes
+
+- cd43d9a: Add table to examples
+
+## 1.4.6
+
+### Patch Changes
+
+- ignore .next on package build
+
+## 1.4.5
+
+### Patch Changes
+
+- 5dc8e8f: feat: add table support
+
+## 1.4.4
+
+### Patch Changes
+
+- 8f1bb44: Feat/add some shadcn
+
+## 1.4.3
+
+### Patch Changes
+
+- f5b4ce0: fix: blob type error
+- 6507630: Remove OST_TOKEN_SECRET as requirement
+
+## 1.4.2
+
+### Patch Changes
+
+- 116171b: feat: add base path functionality
+- 7215826: Update fillRule tag
+- 6e7b37d: fix: Remove double border in aside
+
+## 1.4.1
+
+### Patch Changes
+
+- Fix getDocuments null error
+
+## 1.4.0
+
+### Minor Changes
+
+- a509ad3: Fixes coverImage bug
+- 70650b7: Add discord server to dashboard footer
+
+### Patch Changes
+
+- 3b2eb5d: fix: don't auto create links from 'https://'
+
 ## 1.3.0
 
 ### Minor Changes
